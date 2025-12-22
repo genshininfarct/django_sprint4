@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+{% block title %}
+  {% if is_edit %}
+    Редактирование комментария
+  {% else %}
+    Удаление комментария
+  {% endif %}
+{% endblock %}
+{% block content %}
+  {% if user.is_authenticated %}
+    <div class="col d-flex justify-content-center">
+      <div class="card" style="width: 40rem;">
+        <div class="card-header">
+          {% if is_edit %}
+            Редактирование комментария
+          {% else %}
+            Удаление комментария
+          {% endif %}
+        </div>
+        <div class="card-body">
+          {% if is_edit %}
+            <!-- Форма для редактирования -->
+            <form method="post" action="{% url 'blog:edit_comment' comment.post.id comment.id %}">
+              {% csrf_token %}
+              {% bootstrap_form form %}
+              {% bootstrap_button button_type="submit" content="Сохранить" %}
+            </form>
+          {% else %}
+            <!-- Форма для удаления -->
+            <form method="post" action="{% url 'blog:delete_comment' comment.post.id comment.id %}">
+              {% csrf_token %}
+              <p>{{ comment.text }}</p>
+              {% bootstrap_button button_type="submit" content="Удалить" button_class="btn-danger" %}
+              <a href="{% url 'blog:post_detail' comment.post.id %}" class="btn btn-secondary">Отмена</a>
+            </form>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
