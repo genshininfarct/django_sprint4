@@ -14,15 +14,7 @@ class RegisterForm(UserCreationForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = (
-            'title',
-            'text',
-            'category',
-            'location',
-            'pub_date',
-            'is_published',
-            'image',
-        )
+        exclude = ('author', 'created_at')
         widgets = {
             'pub_date': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }
