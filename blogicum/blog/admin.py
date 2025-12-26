@@ -1,8 +1,10 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.models import User
 from .models import Category, Location, Post
 
-
+# Ваши существующие админ-классы
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('title', 'slug', 'is_published', 'created_at')
     list_filter = ('is_published', 'created_at')
@@ -97,8 +99,11 @@ class PostAdmin(admin.ModelAdmin):
         )
         return form
 
+# Регистрация модели User с использованием UserAdmin
+admin.site.unregister(User)  # Удаляем стандартный UserAdmin
+admin.site.register(User, BaseUserAdmin)  # Регистрируем с использованием UserAdmin
 
-# Регистрация моделей с кастомными админ-классами
+# Регистрация остальных моделей
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Location, LocationAdmin)
 admin.site.register(Post, PostAdmin)
