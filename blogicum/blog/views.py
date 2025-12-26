@@ -112,13 +112,17 @@ def post_edit(request, post_id):
 @login_required
 def post_delete(request, post_id):
     post = get_object_or_404(Post, id=post_id)
+    
+    # Проверяем, что пользователь - автор поста
     if post.author != request.user:
         return redirect('blog:post_detail', post_id=post.id)
+    
     if request.method == 'POST':
         post.delete()
         return redirect('blog:profile', username=request.user.username)
-    return redirect('blog:post_detail', post_id=post.id)
-
+    
+    # Для GET-запроса показываем страницу подтверждения
+    return render(request, 'blog/delete_post.html', {'post': post})
 
 @login_required
 def add_comment(request, post_id):
